@@ -14,7 +14,8 @@ import copy
 
 class hunter_HCT(object):
     # highest probability of containing the target.
-    def __init__(self, map_matrix, size, generator):
+    def __init__(self, map_matrix, size, generator,  disable_print = False):
+        self.disable_print = disable_print
         self.generator = generator
         self.target = (-1, -1)
         self.size = size
@@ -37,7 +38,7 @@ class hunter_HCT(object):
                 if self.believe_matrix[m][n] > 0:
                     self.believe_matrix[m][n] = self.believe_matrix[m][n]/normalize_factor
                     check += self.believe_matrix[m][n]
-        print check
+        # print check
         self.print_believe()
 
     def believe_normalize(self):
@@ -53,10 +54,12 @@ class hunter_HCT(object):
                 if self.believe_matrix[m][n] > 0:
                     self.believe_matrix[m][n] = self.believe_matrix[m][n] / normalize_factor
                     check += self.believe_matrix[m][n]
-        print check
+        # print check
         self.print_believe()
 
     def print_believe(self):
+        if self.disable_print:
+            return
         for m in range(self.size):
             for n in range(self.size):
                 if (m, n) == self.target:
@@ -99,12 +102,12 @@ class hunter_HCT(object):
             current_node_possibility = self.believe_matrix[current_node[0]][current_node[1]]
             self.believe_matrix[current_node[0]][current_node[1]] = current_type_possibility * current_node_possibility
             normalize_factor = current_type_possibility * current_node_possibility + (1 - current_node_possibility)
-            print normalize_factor
+            # print normalize_factor
             self.normalize(normalize_factor)
             # get a move
             cross_type = self.generator.get_cross_information()
             self.target = self.generator.get_target()
-            print cross_type, self.target
+            # print cross_type, self.target
             # refactor possibility
             new_believe_matrix = []
             for k in range(self.size):
