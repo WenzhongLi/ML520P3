@@ -10,13 +10,12 @@ import sys
 
 class Generator(object):
     # init size and density of map
-    def __init__(self):
-        self.height = 50
-        self.width = 50
+    def __init__(self, size):
+        self.size = size
         self.map_matrix = []
-        for k in range(self.height):
+        for k in range(self.size):
             self.map_matrix.append([])
-            for j in range(self.width):
+            for j in range(self.size):
                 self.map_matrix[k].append(0)
 
         self.map_matrix = [
@@ -127,8 +126,8 @@ class Generator(object):
         count_hill = 0
         count_forest = 0
         count_cave = 0
-        for k in range(self.height):
-            for j in range(self.width):
+        for k in range(self.size):
+            for j in range(self.size):
                 if self.map_matrix[k][j] == 0:
                     print 'p',#plane
                     count_flat += 1
@@ -151,15 +150,15 @@ class Generator(object):
 
     # paint maze randomly
     def paint_random(self):
-        matrix = [[0 for j in range(self.width)] for k in range(self.height)]
+        matrix = [[0 for j in range(self.size)] for k in range(self.size)]
         node_list = []
         # init a set of all point could be block
-        for k in range(self.height):
-            for j in range(self.width):
+        for k in range(self.size):
+            for j in range(self.size):
                 node_list.append((k, j))
-        hill_forest_cave = int(self.height * self.width * 0.8)
-        forest_cave = int(self.height * self.width * 0.5)
-        cave = int(self.height * self.width * 0.2)
+        hill_forest_cave = int(self.size * self.size * 0.8)
+        forest_cave = int(self.size * self.size * 0.5)
+        cave = int(self.size * self.size * 0.2)
         # get hill_forest_cave randomly
         hill_forest_cave_set = random.sample(node_list, hill_forest_cave)
         # Paint them 1
@@ -187,7 +186,8 @@ if __name__ == "__main__":
         print "argment", i, sys.argv[i]
     print ('start initialize')
     # set the size and density of this matrix
-    generator = Generator()
+    size = 50
+    generator = Generator(size)
     generator.paint_random()
     generator.print_matrix()
     print ('start over')

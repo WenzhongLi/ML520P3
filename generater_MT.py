@@ -11,14 +11,13 @@ import copy
 
 class Generator(object):
     # init size and density of map
-    def __init__(self):
+    def __init__(self, size):
         self.target = (-1, -1)
-        self.height = 50
-        self.width = 50
+        self.size = size
         self.map_matrix = []
-        for k in range(self.height):
+        for k in range(self.size):
             self.map_matrix.append([])
-            for j in range(self.width):
+            for j in range(self.size):
                 self.map_matrix[k].append(0)
         self.map_matrix = [[1, 2, 1, 2, 3, 2, 2, 2, 2, 3, 0, 3, 1, 2, 2, 1, 2, 2, 2, 3, 3, 2, 2, 2, 0, 1, 0, 1, 0, 2, 3, 2, 1, 0, 2, 2, 3, 0, 1, 3, 1, 2, 3, 2, 1, 2, 2, 1, 3, 1],
             [0, 3, 3, 2, 2, 3, 2, 1, 0, 1, 2, 2, 0, 2, 1, 1, 3, 2, 3, 2, 2, 3, 0, 2, 2, 1, 3, 0, 2, 0, 1, 1, 1, 1, 3, 1, 1, 3, 2, 1, 0, 3, 1, 2, 0, 0, 3, 0, 0, 2],
@@ -81,8 +80,8 @@ class Generator(object):
         #     for j in range(self.width):
         #         print(self.map_matrix[k][j]),
         #     print('\n'),
-        for k in range(self.height):
-            for j in range(self.width):
+        for k in range(self.size):
+            for j in range(self.size):
                 if self.map_matrix[k][j] == 0:
                     print 'p',#plane
                     count_flat += 1
@@ -105,16 +104,16 @@ class Generator(object):
 
     # paint maze randomly
     def paint_random(self):
-        self.target = (random.choice(range(0, self.height)), random.choice(range(0, self.width)))
-        matrix = [[0 for j in range(self.width)] for k in range(self.height)]
+        self.target = (random.choice(range(0, self.size)), random.choice(range(0, self.size)))
+        matrix = [[0 for j in range(self.size)] for k in range(self.size)]
         node_list = []
         # init a set of all point could be block
-        for k in range(self.height):
-            for j in range(self.width):
+        for k in range(self.size):
+            for j in range(self.size):
                 node_list.append((k, j))
-        hill_forest_cave = int(self.height * self.width * 0.8)
-        forest_cave = int(self.height * self.width * 0.5)
-        cave = int(self.height * self.width * 0.2)
+        hill_forest_cave = int(self.size * self.size * 0.8)
+        forest_cave = int(self.size * self.size * 0.5)
+        cave = int(self.size * self.size * 0.2)
         # get hill_forest_cave randomly
         hill_forest_cave_set = random.sample(node_list, hill_forest_cave)
         # Paint them 1
@@ -143,15 +142,15 @@ class Generator(object):
             D_list = [(self.target[0]+1, self.target[1]), (self.target[0], self.target[1]+1),
                       (self.target[0]-1, self.target[1]), (self.target[0], self.target[1]-1)]
             for node in copy.copy(D_list):
-                if node[0] < 0 or node[1] < 0 or node[0] >= self.height or node[1] >= self.width:
+                if node[0] < 0 or node[1] < 0 or node[0] >= self.size or node[1] >= self.size:
                     D_list.remove(node)
             move = random.choice(D_list)
             result = (self.map_matrix[self.target[0]][self.target[1]], self.map_matrix[move[0]][move[1]])
             self.target = move
             return result
 
-    def get_target(self, node):
-        return node == self.target
+    def get_target(self):
+        return self.target
 
 
 if __name__ == "__main__":
