@@ -56,6 +56,13 @@ class hunter_HCT(object):
 
     def find_target(self):
         # init
+        type_possibility = [Decimal(0.2), Decimal(0.3), Decimal(0.3), Decimal(0.2)]
+        node_map_by_type = dict()
+        for i in range(0, 4):
+            node_map_by_type[i] = []
+        for m in range(0, self.size):
+            for n in range(0, self.size):
+                node_map_by_type[self.map[m][n]].append((m, n))
         for k in range(self.size):
             self.believe_matrix.append([])
             for j in range(self.size):
@@ -65,40 +72,40 @@ class hunter_HCT(object):
         random_for_target = random.choice(range(0, self.size * self.size))
         target = (random_for_target / self.size, random_for_target % self.size)
         self.target = target
-        # random a start
-        random_for_first_pick = random.choice(range(0,self.size * self.size))
-        first_node = (random_for_first_pick/self.size, random_for_first_pick % self.size)
-        count = 1
-        current_node = first_node
+        count = 0
         while 1:
-            # check point
-            if current_node == target:
-                current_type = self.map[current_node[0]][current_node[1]]
-                if random.random() > possibility_by_type[current_type]:
-                    # bull's-eye
-                    print "success"
-                    return count
-            count += 1
-            # update possibility
-            current_type = self.map[current_node[0]][current_node[1]]
-            current_type_possibility = possibility_by_type[current_type]
-            current_node_possibility = self.believe_matrix[current_node[0]][current_node[1]]
-            self.believe_matrix[current_node[0]][current_node[1]] = current_type_possibility * current_node_possibility
+            # find a type to update
+            max_possibility = Decimal(-1)
+            max_possibility_type = -1
+            for p in range(0,len(type_possibility)):
+                if max_possibility == Decimal(-1):
+                    max_possibility = type_possibility[p]*possibility_by_type[p]
+                    max_possibility_type = p
+                elif max_possibility < type_possibility[p]*possibility_by_type[p]:
+                    max_possibility = type_possibility[p]*possibility_by_type[p]
+                    max_possibility_type = p
+            # update type possibility and normalization
+            current_type_possibility = possibility_by_type[max_possibility_type]
+            current_node_possibility = type_possibility[max_possibility_type]
+            type_possibility[max_possibility_type] = current_type_possibility * current_node_possibility
             normalize_factor = current_type_possibility * current_node_possibility + (1 - current_node_possibility)
-            # print normalize_factor
-            self.normalize(normalize_factor)
-            # find current highest
-            highest_possibility = Decimal(-1)
-            highest_possibility_index = (-1, -1)
-            for m in range(self.size):
-                for n in range(self.size):
-                    if highest_possibility == Decimal(-1):
-                        highest_possibility = self.believe_matrix[m][n]
-                        highest_possibility_index = (m, n)
-                    elif highest_possibility < self.believe_matrix[m][n]:
-                        highest_possibility = self.believe_matrix[m][n]
-                        highest_possibility_index = (m, n)
-            current_node = highest_possibility_index
+            # for p in range(0, len(type_possibility)):
+            #     type_possibility[p] = type_possibility[p]/normalize_factor
+            #     print_num = copy.copy(type_possibility[p])
+            #     print ("%.3f" % print_num.quantize(Decimal('0.00'))),
+            # print "\n",
+
+            # check every node is that type
+
+            for current_node in node_map_by_type[max_possibility_type]:
+                if current_node == target:
+                    if random.random() > possibility_by_type[max_possibility_type]:
+                        # bull's-eye
+                        print "success", count
+                        return count
+                    # else:
+                        # print "miss"
+                count += 1
 
 
 if __name__ == "__main__":
@@ -116,8 +123,8 @@ if __name__ == "__main__":
     print ('start over')
     count = 0
     for i in range(0, 200):
-        if count % 10 == 0:
-            print count
+        if i % 10 == 0:
+            print i
         generator.paint_random()
         hunter_game = hunter_HCT(generator.get_matrix(), size, True)
         count += hunter_game.find_target()

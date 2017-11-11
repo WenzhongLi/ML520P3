@@ -91,10 +91,10 @@ class hunter_HCT(object):
                 current_type = self.map[current_node[0]][current_node[1]]
                 if random.random() > possibility_by_type[current_type]:
                     # bull's-eye
-                    print "success"
+                    print "success", count
                     return count
-                else:
-                    print "find fail"
+                # else:
+                #     print "find fail"
             count += 1
             # update possibility
             current_type = self.map[current_node[0]][current_node[1]]
@@ -171,3 +171,12 @@ if __name__ == "__main__":
     generator.print_matrix()
     hunter_game = hunter_HCT(generator.get_matrix(), size, generator, True)
     print hunter_game.find_target()
+    count = 0
+    for i in range(0, 200):
+        if i % 10 == 0:
+            print i, count
+        generator = generater_MT.Generator(size)
+        generator.paint_random()
+        hunter_game = hunter_HCT(generator.get_matrix(), size, generator, True)
+        count += hunter_game.find_target()
+    print count / 200
