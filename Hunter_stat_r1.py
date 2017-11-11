@@ -94,9 +94,14 @@ if __name__ == "__main__":
     print ('start initialize')
     size = 50
     # set the size and density of this matrix
-    generator = generater.Generator(size)
-    generator.paint_random()
-    generator.print_matrix()
-    hunter_game = hunter(generator.get_matrix(), size)
-    print hunter_game.find_target()
+    avg = 0;
+    for x in range(0, 100):
+        generator = generater.Generator(size)
+        generator.paint_random()
+        generator.print_matrix()
+        hunter_game = hunter(generator.get_matrix(), size)
+        cur = hunter_game.find_target()
+        avg = avg + cur
+
+    print avg / 100
     print ('start over')
