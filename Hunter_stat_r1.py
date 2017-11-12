@@ -19,7 +19,7 @@ class hunter(object):
         forest = []
         hill = []
         cave = []
-
+        self.belif = [Decimal(0.2), Decimal(0.3), Decimal(0.3), Decimal(0.2)]
         for i in range(0,self.size):
             for j in range(0,self.size):
                 if self.map[i][j] == 0:
@@ -67,13 +67,30 @@ class hunter(object):
 
             # update belif
             if current_type == 0:
-                self.belif[0] = self.belif[0] * possibility_by_type[0]
+                norm = self.belif[0] * possibility_by_type[0] + (1 - self.belif[0])
+                self.belif[0] = self.belif[0] * possibility_by_type[0] / norm
+                self.belif[1] = self.belif[1] / norm
+                self.belif[2] = self.belif[2] / norm
+                self.belif[3] = self.belif[3] / norm
+
             if current_type == 1:
-                self.belif[1] = self.belif[1] * possibility_by_type[1]
+                norm = self.belif[1] * possibility_by_type[1] + (1 - self.belif[1])
+                self.belif[1] = self.belif[1] * possibility_by_type[1] / norm
+                self.belif[0] = self.belif[0] / norm
+                self.belif[2] = self.belif[2] / norm
+                self.belif[3] = self.belif[3] / norm
             if current_type == 2:
-                self.belif[2] = self.belif[2] * possibility_by_type[2]
+                norm = self.belif[2] * possibility_by_type[2] + (1 - self.belif[2])
+                self.belif[2] = self.belif[2] * possibility_by_type[2] / norm
+                self.belif[1] = self.belif[1] / norm
+                self.belif[0] = self.belif[0] / norm
+                self.belif[3] = self.belif[3] / norm
             if current_type == 3:
-                self.belif[3] = self.belif[3] * possibility_by_type[3]
+                norm = self.belif[3] * possibility_by_type[3] + (1 - self.belif[3])
+                self.belif[3] = self.belif[3] * possibility_by_type[3] / norm
+                self.belif[1] = self.belif[1] / norm
+                self.belif[2] = self.belif[2] / norm
+                self.belif[0] = self.belif[0] / norm
 
             current_type = self.get_highest_p(self.belif)
 
