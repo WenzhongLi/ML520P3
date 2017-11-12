@@ -79,10 +79,10 @@ class hunter_HCT(object):
             max_possibility_type = -1
             for p in range(0,len(type_possibility)):
                 if max_possibility == Decimal(-1):
-                    max_possibility = type_possibility[p]*possibility_by_type[p]
+                    max_possibility = type_possibility[p]*(Decimal(1) - possibility_by_type[p])
                     max_possibility_type = p
-                elif max_possibility < type_possibility[p]*possibility_by_type[p]:
-                    max_possibility = type_possibility[p]*possibility_by_type[p]
+                elif max_possibility < type_possibility[p]*(Decimal(1) - possibility_by_type[p]):
+                    max_possibility = type_possibility[p]*(Decimal(1) - possibility_by_type[p])
                     max_possibility_type = p
             # update type possibility and normalization
             current_type_possibility = possibility_by_type[max_possibility_type]
@@ -124,7 +124,7 @@ if __name__ == "__main__":
     count = 0
     for i in range(0, 200):
         if i % 10 == 0:
-            print i
+            print i, count
         generator.paint_random()
         hunter_game = hunter_HCT(generator.get_matrix(), size, True)
         count += hunter_game.find_target()
