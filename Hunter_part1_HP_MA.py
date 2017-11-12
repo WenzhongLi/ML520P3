@@ -128,7 +128,7 @@ if __name__ == "__main__":
     print ('start over')
     count = 0
     for i in range(0, 200):
-        if count % 10 == 0:
+        if 1 % 10 == 0:
             print i, count
         generator.paint_random()
         hunter_game = hunter_HCT(generator.get_matrix(), size, True)
