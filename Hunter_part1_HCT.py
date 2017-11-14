@@ -54,7 +54,7 @@ class hunter_HCT(object):
             print "\n",
         print "\n",
 
-    def find_target(self):
+    def find_target(self, target_node):
         # init
         type_possibility = [Decimal(0.2), Decimal(0.3), Decimal(0.3), Decimal(0.2)]
         node_map_by_type = dict()
@@ -69,9 +69,9 @@ class hunter_HCT(object):
                 self.believe_matrix[k].append(Decimal(1)/Decimal(self.size*self.size))
         possibility_by_type = [Decimal(0.1), Decimal(0.3), Decimal(0.7), Decimal(0.9)]
         # random a target
-        random_for_target = random.choice(range(0, self.size * self.size))
-        target = (random_for_target / self.size, random_for_target % self.size)
-        self.target = target
+        # random_for_target = random.choice(range(0, self.size * self.size))
+        # target = (random_for_target / self.size, random_for_target % self.size)
+        self.target = target_node
         count = 0
         while 1:
             # find a type to update
@@ -98,7 +98,7 @@ class hunter_HCT(object):
             # check every node is that type
 
             for current_node in node_map_by_type[max_possibility_type]:
-                if current_node == target:
+                if current_node == target_node:
                     if random.random() > possibility_by_type[max_possibility_type]:
                         # bull's-eye
                         print "success", count
@@ -127,5 +127,7 @@ if __name__ == "__main__":
             print i
         generator.paint_random()
         hunter_game = hunter_HCT(generator.get_matrix(), size, True)
-        count += hunter_game.find_target()
+        random_for_target = random.choice(range(0, size * size))
+        target = (random_for_target / size, random_for_target % size)
+        count += hunter_game.find_target(size)
     print count/200

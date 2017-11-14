@@ -12,8 +12,8 @@ import copy
 class Generator(object):
     # init size and density of map
     def __init__(self, size):
-        self.target = (-1, -1)
         self.size = size
+        self.target = (random.choice(range(0, self.size)), random.choice(range(0, self.size)))
         self.map_matrix = []
         for k in range(self.size):
             self.map_matrix.append([])

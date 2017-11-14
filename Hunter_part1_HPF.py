@@ -100,7 +100,7 @@ class hunter_HFT(object):
                         highest_possibility = self.believe_matrix[m][n]*(Decimal(1)-current_type_possibility)
                         highest_possibility_index = (m, n)
                     elif highest_possibility < self.believe_matrix[m][n]*(Decimal(1)-current_type_possibility):
-                        highest_possibility = self.believe_matrix[m][n]
+                        highest_possibility = self.believe_matrix[m][n]*(Decimal(1)-current_type_possibility)
                         highest_possibility_index = (m, n)
             current_node = highest_possibility_index
 

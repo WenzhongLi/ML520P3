@@ -85,6 +85,8 @@ class hunter_HCT(object):
         first_node = (random_for_first_pick/self.size, random_for_first_pick % self.size)
         count = 1
         current_node = first_node
+        last_cross_type = (-1, -1)
+        cannot_determine_start_or_end = True
         while 1:
             # check point
             if current_node == self.target:
@@ -107,6 +109,16 @@ class hunter_HCT(object):
             # get a move
             cross_type = self.generator.get_cross_information()
             self.target = self.generator.get_target()
+            # logic determining for start and end
+            if cannot_determine_start_or_end:
+                if cross_type[1] == cross_type[0]:
+                    cannot_determine_start_or_end = False
+                elif last_cross_type == (-1, -1):
+                    last_cross_type = cross_type
+                elif last_cross_type == (cross_type[1], cross_type[0]):
+                    last_cross_type = cross_type
+                else:
+                    cannot_determine_start_or_end = False
             # print cross_type, self.target
             # refactor possibility
             new_believe_matrix = []
@@ -129,6 +141,22 @@ class hunter_HCT(object):
                                         self.map[m + d[0]][n + d[1]] == cross_type[1]:
                             new_believe_matrix[m + d[0]][n + d[1]] += \
                                 self.believe_matrix[m][n]/Decimal(possible_direction_count)
+            if cannot_determine_start_or_end:
+                cross_type = (cross_type[1], cross_type[0])
+                for m in range(self.size):
+                    for n in range(self.size):
+                        possible_direction_count = 0
+                        if self.map[m][n] != cross_type[0]:
+                            continue
+                        for d in direction:
+                            if 0 <= (m + d[0]) < self.size and 0 <= (n + d[1]) < self.size and \
+                                            self.map[m + d[0]][n + d[1]] == cross_type[1]:
+                                possible_direction_count += 1
+                        for d in direction:
+                            if 0 <= (m + d[0]) < self.size and 0 <= (n + d[1]) < self.size and \
+                                            self.map[m + d[0]][n + d[1]] == cross_type[1]:
+                                new_believe_matrix[m + d[0]][n + d[1]] += \
+                                    self.believe_matrix[m][n] / Decimal(possible_direction_count)
             self.believe_matrix = new_believe_matrix
             self.believe_normalize()
 
