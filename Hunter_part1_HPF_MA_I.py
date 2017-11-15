@@ -109,6 +109,10 @@ class hunter_HCT(object):
                         highest_possibility = self.believe_matrix[m][n]*(Decimal(1)-current_type_possibility)
                         highest_possibility_index = (m, n)
                         distance = self.cal_MHT(current_node, (m, n))
+                    elif highest_possibility == self.believe_matrix[m][n]*(Decimal(1)-current_type_possibility) \
+                            and self.cal_MHT(current_node, (m, n)) < distance:
+                        highest_possibility_index = (m, n)
+                        distance = self.cal_MHT(current_node, (m, n))
             current_node = highest_possibility_index
 
 
